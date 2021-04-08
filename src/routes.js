@@ -1,4 +1,5 @@
-const { Console } = require("console");
+const path_db = require('../db');
+
 const express = require("express")
 const routes = express.Router()
 
@@ -57,47 +58,52 @@ routes.post('/cliente', function(req,res){
 })
 
 // Consultar cidade pelo nome e estado
+routes.get('/cidades', async(req,res,next) =>{
 
-routes.get('/cidades', function(req,res){
-
-  fs.readFile('./data/cidades.json', 'utf8', function(err, cidades){
-      if (err) {
-        var response = {status: 'Erro', resposta: err};
-        res.json(response);
-      } else {
-        var obj = JSON.parse(cidades);
-        const result = [];
-        var status = "Nenhuma cidade foi encontrada";
-
-        if(req.query.nome){
-          status = 'Nenhuma cidade foi encontrada com este nome';
-          obj.cidades.forEach(function(cidades) {
-            if (cidades != null) {
-              if (cidades.nome == req.query.nome) {
-                result.push({cidades});
-                status = 'Cidade encontrada'
-              }
-            }
-           });
-        }
-
-        if(req.query.estado){
-          status = 'Nenhuma cidade foi encontrado com este estado';
-          obj.cidades.forEach(function(cidades) {
-            if (cidades != null) {
-              if (cidades.estado == req.query.estado) {
-                status = 'Cidade encontrada'
-                result.push({cidades});
-              }    
-            }
-           });
-        }
-          var response = {status, resposta: result};
-          res.json(response);
-      }
-    });
+    const docs = await path_db.todasCidades();
+    res.json(docs)
 
 })
+// routes.get('/cidades', function(req,res){
+
+//   fs.readFile('./data/cidades.json', 'utf8', function(err, cidades){
+//       if (err) {
+//         var response = {status: 'Erro', resposta: err};
+//         res.json(response);
+//       } else {
+//         var obj = JSON.parse(cidades);
+//         const result = [];
+//         var status = "Nenhuma cidade foi encontrada";
+
+//         if(req.query.nome){
+//           status = 'Nenhuma cidade foi encontrada com este nome';
+//           obj.cidades.forEach(function(cidades) {
+//             if (cidades != null) {
+//               if (cidades.nome == req.query.nome) {
+//                 result.push({cidades});
+//                 status = 'Cidade encontrada'
+//               }
+//             }
+//            });
+//         }
+
+//         if(req.query.estado){
+//           status = 'Nenhuma cidade foi encontrado com este estado';
+//           obj.cidades.forEach(function(cidades) {
+//             if (cidades != null) {
+//               if (cidades.estado == req.query.estado) {
+//                 status = 'Cidade encontrada'
+//                 result.push({cidades});
+//               }    
+//             }
+//            });
+//         }
+//           var response = {status, resposta: result};
+//           res.json(response);
+//       }
+//     });
+
+// })
 // consultar cliente por ID e por nome
 routes.get('/cliente', function(req,res){
 
