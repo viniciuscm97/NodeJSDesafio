@@ -6,222 +6,151 @@ const routes = express.Router()
 var fs = require('fs');
 
 // cadastrar cidade
-routes.post('/cidades', function(req,res){
+routes.post('/cidades', async(req,res,next) => {
+  
+  try {
 
-  fs.readFile('./data/cidades.json', 'utf8', function(err, cidades){
-    if (err) {
-      var response = {status: 'Erro', resposta: err};
-      res.json(response);
-    } else {
-      var obj = JSON.parse(cidades);
-      req.body.id_cidade = obj.cidades.length + 1;
+    const todasCidades = await path_db.todasCidades();
+    const id_cidade = todasCidades.length + 1;
+
+    const {nome,estado} = req.body
+    const cidade = {nome:nome,estado:estado,id_cidade:id_cidade.toString() }
+    const docs = await path_db.cadastraCidade(cidade);
+
+    var response = {status: 'Sucesso', resposta: docs.ops, linhas_inseridas: docs.insertedCount };
+    res.json(response)
+  } catch (err) {
+    var response = {status: 'Erro', resposta: docs.ops};
+    res.json(response)
+    next(err);
+  }
   
-      obj.cidades.push(req.body);
-  
-      fs.writeFile('./data/cidades.json', JSON.stringify(obj), function(err) {
-        if (err) {
-          var response = {status: 'Erro', resposta: err};
-          res.json(response);
-        } else {
-          var response = {status: 'sucesso', resposta: 'Registro incluso com sucesso'};
-          res.json(response);
-        }
-      });
-    }
-  });
 })
 
 // cadastrar cliente
 
-routes.post('/cliente', function(req,res){
+routes.post('/cliente', async(req,res,next) => {
 
-  fs.readFile('./data/clientes.json', 'utf8', function(err, cliente){
-    if (err) {
-      var response = {status: 'Erro', resposta: err};
-      res.json(response);
-    } else {
-      var obj = JSON.parse(cliente);
-      req.body.id_cliente = obj.clientes.length + 1;
-      obj.clientes.push(req.body);
-  
-      fs.writeFile('./data/clientes.json', JSON.stringify(obj), function(err) {
-        if (err) {
-          var response = {status: 'Erro', resposta: err};
-          res.json(response);
-        } else {
-          var response = {status: 'sucesso', resposta: 'Registro incluso com sucesso'};
-          res.json(response);
-        }
-      });
+  try {
+    const todosClientes = await path_db.todosClientes();
+    const id_cliente = todosClientes.length + 1;
+    
+    const {nome,sexo,data_nascimento,idade,cidade} = req.body
+
+    const cliente = {
+      nome:nome,sexo:sexo,data_nascimento:data_nascimento,idade:idade,cidade:cidade,
+      id_cliente:id_cliente.toString()
     }
-  });
+
+    const docs = await path_db.cadastraCliente(cliente);
+    
+    var response = {status: 'Sucesso', resposta: docs.ops, linhas_inseridas: docs.insertedCount };
+    res.json(response)
+  } catch (err) {
+    var response = {status: 'Erro', resposta: docs.ops};
+    res.json(response)
+    next(err);
+  }
 })
 
 // Consultar cidade pelo nome e estado
 routes.get('/cidades', async(req,res,next) =>{
 
-    const docs = await path_db.todasCidades();
-    res.json(docs)
-
-})
-// routes.get('/cidades', function(req,res){
-
-//   fs.readFile('./data/cidades.json', 'utf8', function(err, cidades){
-//       if (err) {
-//         var response = {status: 'Erro', resposta: err};
-//         res.json(response);
-//       } else {
-//         var obj = JSON.parse(cidades);
-//         const result = [];
-//         var status = "Nenhuma cidade foi encontrada";
-
-//         if(req.query.nome){
-//           status = 'Nenhuma cidade foi encontrada com este nome';
-//           obj.cidades.forEach(function(cidades) {
-//             if (cidades != null) {
-//               if (cidades.nome == req.query.nome) {
-//                 result.push({cidades});
-//                 status = 'Cidade encontrada'
-//               }
-//             }
-//            });
-//         }
-
-//         if(req.query.estado){
-//           status = 'Nenhuma cidade foi encontrado com este estado';
-//           obj.cidades.forEach(function(cidades) {
-//             if (cidades != null) {
-//               if (cidades.estado == req.query.estado) {
-//                 status = 'Cidade encontrada'
-//                 result.push({cidades});
-//               }    
-//             }
-//            });
-//         }
-//           var response = {status, resposta: result};
-//           res.json(response);
-//       }
-//     });
-
-// })
-// consultar cliente por ID e por nome
-routes.get('/cliente', function(req,res){
-
-    fs.readFile('./data/clientes.json', 'utf8', function(err, clientes){
-        if (err) {
-          var response = {status: 'Erro', resposta: err};
-          res.json(response);
-        } else {
-          var obj = JSON.parse(clientes);
-          const result = [];
-          var status = "Nenhum cliente foi encontrado";
-          
-          if(req.query.id_cliente){
-            status = 'Nenhum cliente foi encontrado com este id';
-            obj.clientes.forEach(function(cliente) {
-              if (cliente != null) {
-                if (cliente.id_cliente == req.query.id_cliente) {
-                  status = 'Cliente encontrado'
-                  result.push({cliente});
-                }    
-              }
-             });
-          }
-
-          if(req.query.nome){
-            status = 'Nenhum cliente foi encontrado com este nome';
-            obj.clientes.forEach(function(cliente) {
-              if (cliente != null) {
-                if (cliente.nome == req.query.nome) {
-                  status = 'Cliente encontrado'
-                  result.push({cliente});
-                }    
-              }
-             });
-          }
-            var response = {status, resposta: result};
-            res.json(response);
-        }
-      });
-
-})
-
-// remover cliente
-routes.delete('/cliente', function(req,res){
-  
-  fs.readFile('./data/clientes.json', 'utf8', function(err, clientes){
-    if (err) {
-      var response = {status: 'Erro', resposta: err};
-      res.json(response);
-    } else {
-      var obj = JSON.parse(clientes);
+  if(req.body.nome || req.body.estado == null){
+    try {
+      const docs = await path_db.procurarCidadeNome(req.body.nome);
       
-      delete obj.clientes[req.body.id_cliente-1];
-  
-      fs.writeFile('./data/clientes.json', JSON.stringify(obj), function(err) {
-        if (err) {
-          var response = {status: 'Erro', resposta: err};
-          res.json(response);
-        } else {
-          var response = {status: 'sucesso', resposta: 'Registro excluido com sucesso'};
-          res.json(response);
-        }
-      });
+      var response = {status: 'Sucesso', resposta: docs};
+      res.json(response)
+    } catch (err) {
+      var response = {status: 'Erro', resposta: docs};
+      res.json(response)
+      next(err);
     }
-  });
+  
+  }
+  
+  if(req.body.nome == null || req.body.estado){
+    try {
+      const docs = await path_db.procurarCidadeEstado(req.body.estado);
+     
+      var response = {status: 'Sucesso', resposta: docs};
+      res.json(response)
+    } catch (err) {
+      var response = {status: 'Erro', resposta: docs};
+      res.json(response)
+      next(err);
+    }
+    
+  }
+  
+})
+
+// consultar cliente por ID e por nome
+routes.get('/cliente', async(req,res,next) =>{
+
+  if(req.body.nome || req.body.id == null){
+    try {
+      const docs = await path_db.procurarClienteNome(req.body.nome);
+      
+      var response = {status: 'Sucesso', resposta: docs};
+      res.json(response)
+    } catch (err) {
+      var response = {status: 'Erro', resposta: docs};
+      res.json(response)
+      next(err);
+    }
+  
+  }
+  
+  if(req.body.nome == null || req.body.id){
+    try {
+      const docs = await path_db.procurarClienteID(req.body.id);
+      
+      var response = {status: 'Sucesso', resposta: docs};
+      res.json(response)
+    } catch (err) {
+      var response = {status: 'Erro', resposta: docs};
+      res.json(response)
+      next(err);
+    }
+    
+  }
+
+})
+
+// remover cliente por id
+routes.delete('/cliente', async(req,res,next) =>{
+  
+  try {
+    console.log(req.body.id)
+    const docs = await path_db.deletarCliente(req.body.id);
+    
+    var response = {status: 'Erro', resposta: "Linhas excluidas: "+docs.deletedCount};
+    res.json(response)
+  } catch (err) {
+    var response = {status: 'Erro', resposta: "Linhas excluidas: "+docs.deletedCount};
+    res.json(response)
+    next(err);
+  }
+
 })
 
 // alterar nome de cliente
-routes.put('/cliente', function(req,res){
-  
-  fs.readFile('./data/clientes.json', 'utf8', function(err, clientes){
-    if (err) {
-      var response = {status: 'Erro', resposta: err};
-      res.json(response);
-    } else {
-      var obj = JSON.parse(clientes);
-      var status = "Nenhum cliente foi encontrado";
-      
-      if(req.body.id_cliente){
-        status = "Nenhum cliente foi encontrado com este id_cliente";
-        obj.clientes.forEach(function(cliente) {
-          if (cliente != null) {
-            if (cliente.id_cliente == req.body.id_cliente) {
-              status = "Processo realizado";
-              obj.clientes[(cliente.id_cliente-1)].nome = req.body.nome;
-              
-            }    
-          }
-         });
+routes.put('/cliente', async(req,res,next) =>{ 
 
-      }
-      
-      if(req.body.novo_nome){
-        status = "Nenhum cliente foi encontrado com este nome";
-        obj.clientes.forEach(function(cliente) {
-          if (cliente != null) {
-            if (cliente.nome == req.body.nome) {
-              status = "Processo realizado";
-              obj.clientes[(cliente.id_cliente-1)].nome = req.body.novo_nome;
-              
-            }    
-          }
-         });
-      }
-      
-      
+  try {
+    const docs = await path_db.alterarNomeCliente(req.body.nome,req.body.id);
+    
+    var response = {status: 'Sucesso', Linhas_alteradas: docs.result.nModified};
+    res.json(response)
+  } catch (err) {
+    var response = {status: 'Erro', Linhas_alteradas: docs.result.nModified};
+    res.json(response)
+    next(err);
+  }
   
-      fs.writeFile('./data/clientes.json', JSON.stringify(obj), function(err) {
-        if (err) {
-          var response = {status: status, resposta: err};
-          res.json(response);
-        } else {
-          var response = {status: "sucesso", resposta: status};
-          res.json(response);
-        }
-      });
-    }
-  });
+  
 })
 
 
