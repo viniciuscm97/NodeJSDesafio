@@ -3,8 +3,6 @@ const path_db = require('../db');
 const express = require("express")
 const routes = express.Router()
 
-var fs = require('fs');
-
 // cadastrar cidade
 routes.post('/cidades', async(req,res,next) => {
   
@@ -144,6 +142,7 @@ routes.put('/cliente', async(req,res,next) =>{
     
     var response = {status: 'Sucesso', Linhas_alteradas: docs.result.nModified};
     res.json(response)
+    
   } catch (err) {
     var response = {status: 'Erro', Linhas_alteradas: docs.result.nModified};
     res.json(response)
