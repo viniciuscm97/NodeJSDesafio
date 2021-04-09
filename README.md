@@ -1,6 +1,6 @@
 # NodeJS Desafio Compasso
 
-Projeto criado utilizando Node JS, express, fs (operação de leitura e gravação de arquivos JSON) e API REST.
+Projeto criado utilizando Node JS, express, MongoDB, API REST e postman.
 As endpoints foram testadas utilizando a plataforma Postman, utilizando form-urlenconded para submeter.
 
 Caminhos no postman:
@@ -20,3 +20,5 @@ Como exemplo uma solitação do desafio, uma consulta de cliente por nome:
 > https=//imgur.com/a/cKo8q4K
 
 Exportei a collection que criei no postman também, esta nos arquivos do projeto GitHub (desafioNode.postman_collection.json)
+
+Nome do bando de dados: desafionode, collections: cidades e clientes

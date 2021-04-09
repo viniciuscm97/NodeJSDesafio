@@ -10,11 +10,24 @@
 			"item": [
 				{
 					"name": "consultar nome/id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nome",
+									"value": "Camila doss Santossss",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
-							"raw": "http://localhost:3000/cliente?nome=Lucas",
+							"raw": "http://localhost:3000/cliente",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -22,12 +35,6 @@
 							"port": "3000",
 							"path": [
 								"cliente"
-							],
-							"query": [
-								{
-									"key": "nome",
-									"value": "Lucas"
-								}
 							]
 						}
 					},
@@ -43,35 +50,30 @@
 							"urlencoded": [
 								{
 									"key": "nome",
-									"value": "Joao da Silva",
+									"value": "Vinicius Moreira",
 									"type": "text"
 								},
 								{
 									"key": "sexo",
-									"value": "M",
+									"value": "F",
 									"type": "text"
 								},
 								{
 									"key": "data_nascimento",
-									"value": "07/04/2021",
+									"value": "31/9/1997",
 									"type": "text"
 								},
 								{
 									"key": "idade",
-									"value": "22",
+									"value": "40",
 									"type": "text"
 								},
 								{
 									"key": "cidade",
-									"value": "Novo Hamburgo",
+									"value": "Porto Alegre",
 									"type": "text"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "http://localhost:3000/cliente",
@@ -96,13 +98,8 @@
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "id_cliente",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "nome",
-									"value": "Jose da Silva",
+									"key": "id",
+									"value": "2",
 									"type": "text"
 								}
 							],
@@ -135,8 +132,8 @@
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "id_cliente",
-									"value": "2",
+									"key": "ids",
+									"value": "3",
 									"type": "text"
 								}
 							]
@@ -159,94 +156,74 @@
 		},
 		{
 			"name": "cidades",
-			"item": []
-		},
-		{
-			"name": "cadastro",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "nome",
-							"value": "canoas",
-							"type": "text"
+			"item": [
+				{
+					"name": "cadastro",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nome",
+									"value": "Butia",
+									"type": "text"
+								},
+								{
+									"key": "estado",
+									"value": "RS",
+									"type": "text"
+								}
+							]
 						},
-						{
-							"key": "estado",
-							"value": "RS",
-							"type": "text"
+						"url": {
+							"raw": "http://localhost:3000/cidades",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cidades"
+							]
 						}
-					],
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:3000/cidades",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"cidades"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "consultar nome/estado",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "nome",
-							"value": "canoas",
-							"type": "text"
+				{
+					"name": "consultar nome/estado",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "cidades",
+									"value": "RSS",
+									"type": "text"
+								}
+							]
 						},
-						{
-							"key": "estado",
-							"value": "RS",
-							"type": "text"
+						"url": {
+							"raw": "http://localhost:3000/cidades",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"cidades"
+							]
 						}
-					],
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:3000/cidades?nome=canoas",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
-					"path": [
-						"cidades"
-					],
-					"query": [
-						{
-							"key": "nome",
-							"value": "canoas"
-						}
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }
