@@ -16,7 +16,7 @@ routes.post('/cidades', async(req,res,next) => {
     const docs = await path_db.cadastraCidade(cidade);
 
     var response = {status: 'Sucesso', resposta: docs.ops, linhas_inseridas: docs.insertedCount };
-    res.json(response)
+    res.status(200).json(response)
   } catch (err) {
     var response = {status: 'Erro', resposta: docs.ops};
     res.json(response)
@@ -43,7 +43,7 @@ routes.post('/cliente', async(req,res,next) => {
     const docs = await path_db.cadastraCliente(cliente);
     
     var response = {status: 'Sucesso', resposta: docs.ops, linhas_inseridas: docs.insertedCount };
-    res.json(response)
+    res.status(200).json(response)
   } catch (err) {
     var response = {status: 'Erro', resposta: docs.ops};
     res.json(response)
@@ -54,102 +54,117 @@ routes.post('/cliente', async(req,res,next) => {
 // Consultar cidade pelo nome e estado
 routes.get('/cidades', async(req,res,next) =>{
 
-  if(req.body.nome || req.body.estado == null){
-    try {
-      const docs = await path_db.procurarCidadeNome(req.body.nome);
+  if(req.body.nome && req.body.estado == null){
+    const docs = await path_db.procurarCidadeNome(req.body.nome);
+    console.log(docs)
+    if(docs.length == 0){
+      var response = {status: 'Erro', resposta: "Nenhuma cidade encontrada com este nome"};
+      res.status(202).json(response)
       
+    }else{
       var response = {status: 'Sucesso', resposta: docs};
-      res.json(response)
-    } catch (err) {
-      var response = {status: 'Erro', resposta: docs};
-      res.json(response)
-      next(err);
+      res.status(200).json(response)
     }
   
   }
   
-  if(req.body.nome == null || req.body.estado){
-    try {
-      const docs = await path_db.procurarCidadeEstado(req.body.estado);
-     
+  if(req.body.nome == null && req.body.estado){
+    const docs = await path_db.procurarCidadeEstado(req.body.estado);
+    if(docs.length == 0){
+      var response = {status: 'Erro', resposta: "Nenhuma cidade encontrada com este estado"};
+      res.status(202).json(response)
+      
+    }else{
       var response = {status: 'Sucesso', resposta: docs};
-      res.json(response)
-    } catch (err) {
-      var response = {status: 'Erro', resposta: docs};
-      res.json(response)
-      next(err);
+      res.status(200).json(response)
     }
-    
   }
+
+  if(req.body.nome == null && req.body.estado == null){
+    var response = {status: 'Erro', resposta: "Coluna de tabela cidades não encontrada, pesquisar por estado ou nome"};
+      res.status(202).json(response)
+      
+  }
+
   
 })
 
 // consultar cliente por ID e por nome
 routes.get('/cliente', async(req,res,next) =>{
 
-  if(req.body.nome || req.body.id == null){
-    try {
-      const docs = await path_db.procurarClienteNome(req.body.nome);
+  if(req.body.nome && req.body.id == null){
+    const docs = await path_db.procurarClienteNome(req.body.nome);
+    if(docs == null){
+      var response = {status: 'Erro', resposta: "Nenhum usuário encontrado com este nome"};
+      res.status(202).json(response)
       
+    }else{
       var response = {status: 'Sucesso', resposta: docs};
-      res.json(response)
-    } catch (err) {
-      var response = {status: 'Erro', resposta: docs};
-      res.json(response)
-      next(err);
+      res.status(200).json(response)
     }
   
   }
   
-  if(req.body.nome == null || req.body.id){
-    try {
-      const docs = await path_db.procurarClienteID(req.body.id);
-      
+  if(req.body.nome == null && req.body.id){
+    const docs = await path_db.procurarClienteID(req.body.id);
+    if(docs == null){
+      var response = {status: 'Erro', resposta: "Nenhum usuário encontrado com este ID"};
+      res.status(202).json(response)
+     
+    }else{
       var response = {status: 'Sucesso', resposta: docs};
-      res.json(response)
-    } catch (err) {
-      var response = {status: 'Erro', resposta: docs};
-      res.json(response)
-      next(err);
+      res.status(200).json(response)
     }
     
+  }
+
+  if(req.body.nome == null && req.body.id == null){
+    var response = {status: 'Erro', resposta: "Coluna de tabela Cliente não encontrada, pesquisar por id ou nome"};
+      res.status(202).json(response)
+      
   }
 
 })
 
 // remover cliente por id
 routes.delete('/cliente', async(req,res,next) =>{
-  
-  try {
-    console.log(req.body.id)
+  if(req.body.id){
     const docs = await path_db.deletarCliente(req.body.id);
-    
-    var response = {status: 'Erro', resposta: "Linhas excluidas: "+docs.deletedCount};
-    res.json(response)
-  } catch (err) {
-    var response = {status: 'Erro', resposta: "Linhas excluidas: "+docs.deletedCount};
-    res.json(response)
-    next(err);
+    if(docs.deletedCount == 0){
+      var response = {status: 'Erro', resposta: "Nenhum cliente encontrado com este ID: "+req.body.id};
+      res.status(202).json(response)
+    }else{
+      var response = {status: 'Sucesso', resposta: "Linhas excluidas: "+docs.deletedCount};
+      res.status(200).json(response)
+    }
+  }else{
+    var response = {status: 'Erro', resposta: "Nome de coluna na tabela cliente não encontrado, pesquisar por id"};
+    res.status(202).json(response)
   }
+
+
 
 })
 
 // alterar nome de cliente
-routes.put('/cliente', async(req,res,next) =>{ 
+routes.put('/cliente', async(req,res,next) =>{
 
-  try {
-    const docs = await path_db.alterarNomeCliente(req.body.nome,req.body.id);
-    
-    var response = {status: 'Sucesso', Linhas_alteradas: docs.result.nModified};
-    res.json(response)
-    
-  } catch (err) {
-    var response = {status: 'Erro', Linhas_alteradas: docs.result.nModified};
-    res.json(response)
-    next(err);
+  if(req.body.novonome && req.body.id){
+    const docs = await path_db.alterarNomeCliente(req.body.novonome,req.body.id);
+    if(docs.result.nModified == 0){
+      var response = {status: 'Erro', Linhas_alteradas: docs.result.nModified, resposta: "Nenhuma linha foi alterada pois cliente já estava com este nome cadastrado"};
+      res.status(202).json(response)
+    }else{
+      var response = {status: 'Sucesso', Linhas_alteradas: docs.result.nModified};
+      res.status(200).json(response)
+    }
   }
-  
-  
+
+  if(req.body.novonome == null || req.body.id == null){
+    var response = {status: 'Erro', resposta: "Nenhuma linha foi alterada! Para alterar o nome do cliente informe id e novonome"};
+      res.status(202).json(response)
+  }
+    
 })
 
 
