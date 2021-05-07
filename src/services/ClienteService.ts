@@ -1,12 +1,19 @@
-import  {globalAny} from '../database/db';
+const globalAny:any = global;
 
-import {Cliente} from '../models/Cliente'
+const mongoClient = require("mongodb").MongoClient;
+
+const conexao = mongoClient.connect("mongodb://localhost", { useUnifiedTopology: true })
+            .then(conn => globalAny.conn = conn.db("desafionode"))
+            .catch(err => console.log(err));
+
+// import {Cliente} from '../models/Cliente'
 
 class ClienteService {
 
-    async buscarClientePorNome(nome: string){
-        console.log(nome)
-        return globalAny.conn.collection("cidades").find({nome: nome}).toArray();
+    buscarClientePorNome(nome: string){
+        const x =  globalAny.conn.collection("clientes").find({nome: nome}).toArray()
+        console.log(x)
+        return globalAny.conn.collection("clientes").find({nome: nome}).toArray();
     }
 
 }

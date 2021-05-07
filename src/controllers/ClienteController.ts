@@ -3,17 +3,22 @@ import {ClienteService} from '../services/ClienteService'
 import {Request, Response} from 'express'
 
 class ClienteController {
-    private clienteService: ClienteService;
+    // clienteService: ClienteService;
 
-    constructor(){
-        this.clienteService = new ClienteService()
-    }
+    // constructor(){
+    //     this.clienteService = new ClienteService()
+    // }
 
-    async buscarClientePorNomeID(req: Request,res: Response) : Promise<Response> {
-
+    buscarClientePorNomeID(req: Request,res: Response) {
+        const clienteService = new ClienteService()
         const { nome } = req.body
-        console.log(this.clienteService)
-        const docs = await this.clienteService.buscarClientePorNome(nome);
+
+        const docs =  clienteService.buscarClientePorNome(nome);
+
+        // clienteService.buscarClientePorNome(nome)
+        // .then(result => console.log(result + ' ok '))
+        // .catch( erro => console.log(erro))
+
         let response = {status: 'Sucesso', resposta: docs};
         return res.status(200).json(response)
 

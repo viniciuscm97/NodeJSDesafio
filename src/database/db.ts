@@ -7,7 +7,6 @@ mongoClient.connect("mongodb://localhost", { useUnifiedTopology: true })
             .catch(err => console.log(err));
 
 
-export {globalAny}
 
 function procurarCidadeNome(nome) {
     
