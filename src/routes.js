@@ -59,7 +59,7 @@ routes.get('/cidades', async(req,res,next) =>{
     console.log(docs)
     if(docs.length == 0){
       let response = {status: 'Erro', resposta: "Nenhuma cidade encontrada com este nome"};
-      res.status(202).json(response)
+      res.status(404).json(response)
       
     }else{
       let response = {status: 'Sucesso', resposta: docs};
@@ -72,7 +72,7 @@ routes.get('/cidades', async(req,res,next) =>{
     const docs = await path_db.procurarCidadeEstado(req.body.estado);
     if(docs.length == 0){
       let response = {status: 'Erro', resposta: "Nenhuma cidade encontrada com este estado"};
-      res.status(202).json(response)
+      res.status(404).json(response)
       
     }else{
       let response = {status: 'Sucesso', resposta: docs};
@@ -82,7 +82,7 @@ routes.get('/cidades', async(req,res,next) =>{
 
   if(req.body.nome == null && req.body.estado == null){
     let response = {status: 'Erro', resposta: "Coluna de tabela cidades não encontrada, pesquisar por estado ou nome"};
-      res.status(202).json(response)
+      res.status(404).json(response)
       
   }
 
@@ -96,7 +96,7 @@ routes.get('/cliente', async(req,res,next) =>{
     const docs = await path_db.procurarClienteNome(req.body.nome);
     if(docs == null){
       let response = {status: 'Erro', resposta: "Nenhum usuário encontrado com este nome"};
-      res.status(202).json(response)
+      res.status(404).json(response)
       
     }else{
       let response = {status: 'Sucesso', resposta: docs};
@@ -109,7 +109,7 @@ routes.get('/cliente', async(req,res,next) =>{
     const docs = await path_db.procurarClienteID(req.body.id);
     if(docs == null){
       let response = {status: 'Erro', resposta: "Nenhum usuário encontrado com este ID"};
-      res.status(202).json(response)
+      res.status(404).json(response)
      
     }else{
       let response = {status: 'Sucesso', resposta: docs};
@@ -120,7 +120,7 @@ routes.get('/cliente', async(req,res,next) =>{
 
   if(req.body.nome == null && req.body.id == null){
     let response = {status: 'Erro', resposta: "Coluna de tabela Cliente não encontrada, pesquisar por id ou nome"};
-      res.status(202).json(response)
+      res.status(404).json(response)
       
   }
 
@@ -132,14 +132,14 @@ routes.delete('/cliente', async(req,res,next) =>{
     const docs = await path_db.deletarCliente(req.body.id);
     if(docs.deletedCount == 0){
       let response = {status: 'Erro', resposta: "Nenhum cliente encontrado com este ID: "+req.body.id};
-      res.status(202).json(response)
+      res.status(404).json(response)
     }else{
       let response = {status: 'Sucesso', resposta: "Linhas excluidas: "+docs.deletedCount};
       res.status(200).json(response)
     }
   }else{
     let response = {status: 'Erro', resposta: "Nome de coluna na tabela cliente não encontrado, pesquisar por id"};
-    res.status(202).json(response)
+    res.status(404).json(response)
   }
 
 
@@ -153,7 +153,7 @@ routes.put('/cliente', async(req,res,next) =>{
     const docs = await path_db.alterarNomeCliente(req.body.novonome,req.body.id);
     if(docs.result.nModified == 0){
       let response = {status: 'Erro', Linhas_alteradas: docs.result.nModified, resposta: "Nenhuma linha foi alterada pois cliente já estava com este nome cadastrado"};
-      res.status(202).json(response)
+      res.status(404).json(response)
     }else{
       let response = {status: 'Sucesso', Linhas_alteradas: docs.result.nModified};
       res.status(200).json(response)
@@ -162,7 +162,7 @@ routes.put('/cliente', async(req,res,next) =>{
 
   if(req.body.novonome == null || req.body.id == null){
     let response = {status: 'Erro', resposta: "Nenhuma linha foi alterada! Para alterar o nome do cliente informe id e novonome"};
-      res.status(202).json(response)
+      res.status(404).json(response)
   }
     
 })
