@@ -115,8 +115,6 @@ class ClienteController {
             const todosClientes = await clienteService.todosClientes();
             const id_cliente = todosClientes.length + 1;           
 
-            console.log(id_cliente)
-
             const docs = await clienteService.cadastraCliente({nome,sexo,data_nascimento,idade,cidade, id_cliente});
             
             let response = {status: 'Sucesso', resposta: docs.ops, linhas_inseridas: docs.insertedCount };
@@ -126,6 +124,7 @@ class ClienteController {
             res.json(response)
             next(err);
           }
+          
       }
 }
 

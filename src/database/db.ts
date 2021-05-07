@@ -27,11 +27,11 @@ function procurarCidadeEstado(estado) {
 //     return globalAny.conn.collection("clientes").findOne({id_cliente: id});
 // }
 
-function cadastraCidade(cidade){
-    return globalAny.conn.collection("cidades").insertOne(cidade);
+// function cadastraCidade(cidade){
+//     return globalAny.conn.collection("cidades").insertOne(cidade);
 
-}
-// function cadastraCliente(cliente){
+// }
+// // function cadastraCliente(cliente){
 //     return globalAny.conn.collection("clientes").insertOne(cliente);
 
 // }
@@ -48,10 +48,10 @@ function procurarCliente(id){
     return globalAny.conn.collection("clientes").findOne({id_cliente:id});
 }
 
-function todasCidades() {
-    return globalAny.conn.collection("cidades").find().toArray();
-}
+// function todasCidades() {
+//     return globalAny.conn.collection("cidades").find().toArray();
+// }
 // function todosClientes() {
 //     return globalAny.conn.collection("clientes").find().toArray();
 // }
-module.exports = {procurarCidadeNome,cadastraCidade,procurarCliente,procurarCidadeEstado,todasCidades}
+module.exports = {procurarCidadeNome,procurarCliente,procurarCidadeEstado}

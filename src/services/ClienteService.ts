@@ -1,3 +1,5 @@
+import { Cliente } from "../models/Cliente";
+
 const globalAny:any = global;
 
 const mongoClient = require("mongodb").MongoClient;
@@ -36,10 +38,10 @@ class ClienteService {
 
     }
 
-    cadastraCliente({nome,data_nascimento,sexo,idade,id_cliente}:IClienteCreate){
-
+    cadastraCliente({nome,data_nascimento,sexo,idade,id_cliente,cidade}:IClienteCreate){
         const idString = id_cliente.toString()
-        return globalAny.conn.collection("clientes").insertOne({nome,data_nascimento,sexo,idade,idString});
+        const cliente = new Cliente(idString,nome,data_nascimento,idade,sexo,cidade)
+        return globalAny.conn.collection("clientes").insertOne(cliente);
 
     }
     todosClientes(){
