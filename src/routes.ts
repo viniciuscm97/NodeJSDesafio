@@ -1,7 +1,7 @@
 const path_db = require('../db');
 
-const express = require("express")
-const routes = express.Router()
+import {Router} from "express"
+const routes = Router()
 
 // cadastrar cidade
 routes.post('/cidades', async(req,res,next) => {
@@ -169,4 +169,4 @@ routes.put('/cliente', async(req,res,next) =>{
 
 
 
-module.exports = routes
+export { routes }

@@ -1,9 +1,10 @@
-const express = require('express')
+import {express}  from 'express'
+
 const server = express()
 
 server.use(express.urlencoded({ extended: true}))
 
-const routes = require("./routes")
+import {routes} from "./routes"
 
 server.use(routes)
 
