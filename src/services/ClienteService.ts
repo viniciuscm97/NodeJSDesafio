@@ -2,20 +2,49 @@ const globalAny:any = global;
 
 const mongoClient = require("mongodb").MongoClient;
 
-const conexao = mongoClient.connect("mongodb://localhost", { useUnifiedTopology: true })
+mongoClient.connect("mongodb://localhost", { useUnifiedTopology: true })
             .then(conn => globalAny.conn = conn.db("desafionode"))
             .catch(err => console.log(err));
 
 // import {Cliente} from '../models/Cliente'
-
+interface IClienteCreate {
+    nome: string,
+    sexo: string,
+    data_nascimento: Date,
+    idade: string,
+    cidade:string,
+    id_cliente: string
+}
 class ClienteService {
 
     buscarClientePorNome(nome: string){
-        const x =  globalAny.conn.collection("clientes").find({nome: nome}).toArray()
-        console.log(x)
+
         return globalAny.conn.collection("clientes").find({nome: nome}).toArray();
     }
 
+    buscarClientePorID(id: string){
+
+        return globalAny.conn.collection("clientes").findOne({id_cliente: id});
+    }
+
+    deletarCliente(id: string){
+        return globalAny.conn.collection("clientes").deleteOne({ id_cliente: id });
+
+    }
+    alterarNomeCliente(novonome: string, id:string){
+         return globalAny.conn.collection("clientes").updateOne({ id_cliente: id }, { $set: {"nome": novonome }})
+
+    }
+
+    cadastraCliente({nome,data_nascimento,sexo,idade,id_cliente}:IClienteCreate){
+
+        const idString = id_cliente.toString()
+        return globalAny.conn.collection("clientes").insertOne({nome,data_nascimento,sexo,idade,idString});
+
+    }
+    todosClientes(){
+        return globalAny.conn.collection("clientes").find().toArray();
+    }
 }
 
 export {ClienteService}

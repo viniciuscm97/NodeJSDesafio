@@ -29,32 +29,9 @@ const clienteController = new ClienteController()
   
 // })
 
-// // cadastrar cliente
+// cadastrar cliente
 
-// routes.post('/cliente', async(req,res,next) => {
-//   let docs = []
-
-//   try {
-//     const todosClientes = await path_db.todosClientes();
-//     const id_cliente = todosClientes.length + 1;
-    
-//     const {nome,sexo,data_nascimento,idade,cidade} = req.body
-
-//     const cliente = {
-//       nome:nome,sexo:sexo,data_nascimento:data_nascimento,idade:idade,cidade:cidade,
-//       id_cliente:id_cliente.toString()
-//     }
-
-//     docs = await path_db.cadastraCliente(cliente);
-    
-//     let response = {status: 'Sucesso', resposta: docs.ops, linhas_inseridas: docs.insertedCount };
-//     res.status(200).json(response)
-//   } catch (err) {
-//     let response = {status: 'Erro', resposta: docs.ops};
-//     res.json(response)
-//     next(err);
-//   }
-// })
+routes.post('/cliente',clienteController.cadastrarCliente)
 
 // // Consultar cidade pelo nome e estado
 // routes.get('/cidades', async(req,res,next) =>{
@@ -94,88 +71,17 @@ const clienteController = new ClienteController()
   
 // })
 
-// // consultar cliente por ID e por nome
-// routes.get('/cliente', async(req,res,next) =>{
-
-//   if(req.body.nome && req.body.id == null){
-//     const docs = await path_db.procurarClienteNome(req.body.nome);
-//     if(docs == null){
-//       let response = {status: 'Erro', resposta: "Nenhum usuário encontrado com este nome"};
-//       res.status(404).json(response)
-      
-//     }else{
-//       let response = {status: 'Sucesso', resposta: docs};
-//       res.status(200).json(response)
-//     }
-  
-//   }
-  
-//   if(req.body.nome == null && req.body.id){
-//     const docs = await path_db.procurarClienteID(req.body.id);
-//     if(docs == null){
-//       let response = {status: 'Erro', resposta: "Nenhum usuário encontrado com este ID"};
-//       res.status(404).json(response)
-     
-//     }else{
-//       let response = {status: 'Sucesso', resposta: docs};
-//       res.status(200).json(response)
-//     }
-    
-//   }
-
-//   if(req.body.nome == null && req.body.id == null){
-//     let response = {status: 'Erro', resposta: "Coluna de tabela Cliente não encontrada, pesquisar por id ou nome"};
-//       res.status(404).json(response)
-      
-//   }
-
-// })
+// consultar cliente por ID e por nome
+routes.get('/cliente',clienteController.buscarClientePorNomeID)
 
 
 // // remover cliente por id
-// routes.delete('/cliente', async(req,res,next) =>{
-//   if(req.body.id){
-//     const docs = await path_db.deletarCliente(req.body.id);
-//     if(docs.deletedCount == 0){
-//       let response = {status: 'Erro', resposta: "Nenhum cliente encontrado com este ID: "+req.body.id};
-//       res.status(404).json(response)
-//     }else{
-//       let response = {status: 'Sucesso', resposta: "Linhas excluidas: "+docs.deletedCount};
-//       res.status(200).json(response)
-//     }
-//   }else{
-//     let response = {status: 'Erro', resposta: "Nome de coluna na tabela cliente não encontrado, pesquisar por id"};
-//     res.status(404).json(response)
-//   }
-
-
-
-// })
+routes.delete('/cliente',clienteController.removerClientePorId)
 
 // // alterar nome de cliente
-// routes.put('/cliente', async(req,res,next) =>{
 
-//   if(req.body.novonome && req.body.id){
-//     const docs = await path_db.alterarNomeCliente(req.body.novonome,req.body.id);
-//     if(docs.result.nModified == 0){
-//       let response = {status: 'Erro', Linhas_alteradas: docs.result.nModified, resposta: "Nenhuma linha foi alterada pois cliente já estava com este nome cadastrado"};
-//       res.status(404).json(response)
-//     }else{
-//       let response = {status: 'Sucesso', Linhas_alteradas: docs.result.nModified};
-//       res.status(200).json(response)
-//     }
-//   }
-
-//   if(req.body.novonome == null || req.body.id == null){
-//     let response = {status: 'Erro', resposta: "Nenhuma linha foi alterada! Para alterar o nome do cliente informe id e novonome"};
-//       res.status(404).json(response)
-//   }
-    
-// })
+routes.put('/cliente',clienteController.alterarNomeCliente)
 
 
-// consultar todos clientes
-
-routes.get('/cliente',clienteController.buscarClientePorNomeID)
 
 export { routes }
