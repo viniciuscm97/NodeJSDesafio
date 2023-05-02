@@ -1,4 +1,4 @@
-# NodeJS Desafio Compasso
+# NodeJS Desafio
 
 Projeto criado utilizando Node JS, express, MongoDB, API REST e postman.
 As endpoints foram testadas utilizando a plataforma Postman, utilizando form-urlenconded para submeter.
